@@ -64,7 +64,7 @@ type SendAppletMsgReq struct {
 	IndexPage  string `json:"indexPage"`  //	小程序的跳转页面
 }
 
-type WxChatMessage struct {
+type PrivateMsgV2 struct {
 	Content            string  `json:"content"`
 	CreateTime         int     `json:"createTime"`
 	DisplayFullContent string  `json:"displayFullContent"`
@@ -77,9 +77,36 @@ type WxChatMessage struct {
 	Type               MsgType `json:"type"`
 }
 
-type PrivateMsg struct {
-	WxChatMessage
-	GroupId          string `json:"groupId"`
-	GroupMemberCount int    `json:"groupMemberCount"`
-	IsGroup          bool   `json:"isGroup"`
+type PrivateMsgV1 struct {
+	Content   string  `json:"content"`
+	FromGroup string  `json:"fromGroup"`
+	FromUser  string  `json:"fromUser"`
+	IsSendMsg int     `json:"isSendMsg"`
+	MsgId     int64   `json:"msgId"`
+	Pid       int     `json:"pid"`
+	Sign      string  `json:"sign"`
+	Signature string  `json:"signature"`
+	Time      string  `json:"time"`
+	Timestamp int     `json:"timestamp"`
+	Type      MsgType `json:"type"`
+}
+
+type WxPrivateMsg struct {
+	Content            string  `json:"content"`
+	FromGroup          string  `json:"fromGroup"`
+	FromUser           string  `json:"fromUser"`
+	IsSendMsg          int     `json:"isSendMsg"`
+	MsgId              int64   `json:"msgId"`
+	Pid                int     `json:"pid"`
+	Sign               string  `json:"sign"`
+	Signature          string  `json:"signature"`
+	Time               string  `json:"time"`
+	Timestamp          int     `json:"timestamp"`
+	Type               MsgType `json:"type"`
+	DisplayFullContent string  `json:"displayFullContent"`
+	GroupMemberCount   int     `json:"groupMemberCount"`
+}
+
+func (wxPrivateMsg WxPrivateMsg) IsGroup() bool {
+	return wxPrivateMsg.FromGroup != "" && wxPrivateMsg.FromGroup != wxPrivateMsg.FromUser
 }

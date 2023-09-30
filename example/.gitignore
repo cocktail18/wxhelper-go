@@ -1,1 +1,4 @@
 config.ini
+log/
+logs/
+*.log

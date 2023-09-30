@@ -4,10 +4,12 @@ go 1.20
 
 require (
 	github.com/beevik/etree v1.2.0
+	github.com/bitly/go-simplejson v0.5.1
 	github.com/imroc/req/v3 v3.42.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cast v1.5.1
 	go.zoe.im/injgo v0.0.2
+	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63
 	golang.org/x/sys v0.12.0
 )
 
@@ -27,7 +29,6 @@ require (
 	github.com/quic-go/quic-go v0.38.1 // indirect
 	github.com/refraction-networking/utls v1.5.3 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/text v0.13.0 // indirect

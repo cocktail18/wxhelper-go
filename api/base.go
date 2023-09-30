@@ -4,10 +4,14 @@ import (
 	"encoding/json"
 	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/cocktail18/wxhelper-go/util"
+	"github.com/pkg/errors"
 	"path/filepath"
 )
 
 func (api *Api) CheckLogin() (bool, error) {
+	if api.ApiVersion == ApiVersionV1 {
+		return false, errors.New("v1有崩溃，不能调用")
+	}
 	url, err := api.getUrl(CheckLoginUrl)
 	if err != nil {
 		return false, err
@@ -192,4 +196,19 @@ func (api *Api) GetContactProfile(wxid string) (*proto.ContactProfile, error) {
 	var roomMember proto.ContactProfile
 	err = json.Unmarshal(resp.Data, &roomMember)
 	return &roomMember, err
+}
+
+func (api *Api) GetContactNickname(wxidOrGroupId string) (string, error) {
+	// 看起来有bug，返回都是空
+	url, err := api.getUrl(GetContactNicknameUrl)
+	if err != nil {
+		return "", err
+	}
+	resp, err := util.Request(url, map[string]interface{}{
+		"id": wxidOrGroupId,
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(resp.Data), err
 }

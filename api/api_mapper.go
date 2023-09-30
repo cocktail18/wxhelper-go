@@ -29,6 +29,7 @@ const (
 	UnHookAudioMsgUrl
 	GetContactListUrl
 	GetContactProfileUrl
+	GetContactNicknameUrl
 
 	//转账相关
 	ComfirmTransfer
@@ -82,26 +83,26 @@ const (
 var (
 	urlMapper = map[ApiVersion]map[ApiUrl]string{
 		ApiVersionV1: {
-			CheckLoginUrl:        "/api/?type=0",
-			UserInfoUrl:          "/api/?type=1",
-			SendTextMsgUrl:       "/api/?type=2",
-			SendAtTextUrl:        "/api/?type=3",
-			SendImagesMsgUrl:     "/api/?type=5",
-			SendFileMsgUrl:       "/api/?type=6",
-			SendCustomEmotionUrl: "",
-			SendAppletUrl:        "",
-			SendPatMsgUrl:        "/api/?type=50", // 拍一拍
-			SearchFriend:         "/api/?type=19", //通过手机或qq查找微信
-			FriendRequest:        "/api/?type=20", //通过wxid添加好友
-			ConfirmFriendRequest: "/api/?type=23", //通过好友申请
-			OcrUrl:               "/api/?type=49",
-			ForwardMsgUrl:        "/api/?type=40",
-			HookSyncMsgUrl:       "/api/?type=9",
-			UnHookSyncMsgUrl:     "/api/?type=10",
-			HookAudioMsgUrl:      "/api/?type=13",
-			UnHookAudioMsgUrl:    "/api/?type=14",
-			GetContactListUrl:    "/api/?type=46",
-			GetContactProfileUrl: "/api/?type=55",
+			CheckLoginUrl:         "/api/?type=0",
+			UserInfoUrl:           "/api/?type=1",
+			SendTextMsgUrl:        "/api/?type=2",
+			SendAtTextUrl:         "/api/?type=3",
+			SendImagesMsgUrl:      "/api/?type=5",
+			SendFileMsgUrl:        "/api/?type=6",
+			SendCustomEmotionUrl:  "",
+			SendAppletUrl:         "",
+			SendPatMsgUrl:         "/api/?type=50", // 拍一拍
+			SearchFriend:          "/api/?type=19", //通过手机或qq查找微信
+			FriendRequest:         "/api/?type=20", //通过wxid添加好友
+			ConfirmFriendRequest:  "/api/?type=23", //通过好友申请
+			OcrUrl:                "/api/?type=49",
+			ForwardMsgUrl:         "/api/?type=40",
+			HookSyncMsgUrl:        "/api/?type=9",
+			UnHookSyncMsgUrl:      "/api/?type=10",
+			HookAudioMsgUrl:       "/api/?type=13",
+			UnHookAudioMsgUrl:     "/api/?type=14",
+			GetContactListUrl:     "/api/?type=46",
+			GetContactNicknameUrl: "/api/?type=55",
 
 			//转账相关
 			ComfirmTransfer: "/api/?type=45", //收到转账消息后，自动收款确认。type=49 即是转账消息

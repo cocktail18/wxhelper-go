@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"fmt"
 	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/imroc/req/v3"
@@ -23,6 +24,9 @@ func Request(url string, data interface{}) (*proto.Response, error) {
 	}
 	if !resp.IsSuccessState() {
 		return nil, fmt.Errorf("statusCode:%v msg:%v", resp.StatusCode, string(resp.Bytes()))
+	}
+	if result.Code == 0 && result.Result == "ERROR" {
+		return nil, errors.New("接口调用失败：" + result.Msg)
 	}
 	return &result, nil
 }
