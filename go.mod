@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/beevik/etree v1.2.0
-	github.com/bitly/go-simplejson v0.5.1
 	github.com/imroc/req/v3 v3.42.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cast v1.5.1
