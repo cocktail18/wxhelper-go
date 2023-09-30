@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/cocktail18/wx-helper-go/util"
+	"github.com/cocktail18/wxhelper-go/util"
 )
 
 func (api *Api) GetSnsFirstPage() error {

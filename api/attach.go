@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/cocktail18/wx-helper-go/util"
+	"github.com/cocktail18/wxhelper-go/util"
 )
 
 // 下载附件，保存在微信文件目录下 wxid_xxx/wxhelper 目录下

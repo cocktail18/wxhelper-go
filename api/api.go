@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/cocktail18/wx-helper-go/tcpserver"
-	"github.com/cocktail18/wx-helper-go/util"
+	"github.com/cocktail18/wxhelper-go/tcpserver"
+	"github.com/cocktail18/wxhelper-go/util"
 	"github.com/pkg/errors"
 	"net"
 	"strings"

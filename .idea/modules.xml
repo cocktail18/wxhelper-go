@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/wx-helper-go.iml" filepath="$PROJECT_DIR$/.idea/wx-helper-go.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/wxhelper-go.iml" filepath="$PROJECT_DIR$/.idea/wxhelper-go.iml" />
     </modules>
   </component>
 </project>

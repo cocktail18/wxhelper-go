@@ -2,8 +2,9 @@ package util
 
 import (
 	"fmt"
-	"github.com/cocktail18/wx-helper-go/proto"
+	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/imroc/req/v3"
+	"golang.org/x/exp/slog"
 	"net"
 )
 
@@ -37,4 +38,15 @@ func GetRandomAvailablePort() (int, error) {
 	// 获取监听的地址
 	addr := l.Addr().(*net.TCPAddr)
 	return addr.Port, nil
+}
+
+func recoveryGo(f func()) {
+	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				slog.Error("recovery: %+v", err)
+			}
+		}()
+		f()
+	}()
 }

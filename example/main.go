@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/cocktail18/wx-helper-go/api"
-	"github.com/cocktail18/wx-helper-go/helper"
-	"github.com/cocktail18/wx-helper-go/injector"
-	"github.com/cocktail18/wx-helper-go/proto"
+	"github.com/cocktail18/wxhelper-go/api"
+	"github.com/cocktail18/wxhelper-go/helper"
+	"github.com/cocktail18/wxhelper-go/injector"
+	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 	"time"
@@ -13,8 +13,8 @@ import (
 
 const (
 	apiVersion = api.ApiVersionV1 // 3.9.5.81 使用v2
-	dllPath    = "wxhelper.3.9.2.23.dll"
-	port       = 19088
+	dllPath    = "wxhelper.dll"
+	port       = 10086
 )
 
 func injectWx() {
@@ -25,9 +25,8 @@ func injectWx() {
 			panic(err2)
 		}
 		<-time.After(time.Second * 3)
-		err = injector.InjectByProcess(process, dllPath)
+		err = injector.InjectByProcess(apiVersion, process, dllPath, port)
 	}
-
 	if err != nil {
 		panic(err)
 	}
@@ -71,6 +70,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	isLogin, err := ins.CheckLogin()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("isLogin", isLogin)
 
 	userInfo, err := ins.GetUserInfo()
 	if err != nil {

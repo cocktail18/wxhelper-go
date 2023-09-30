@@ -3,7 +3,7 @@ package helper
 import (
 	"encoding/json"
 	"github.com/beevik/etree"
-	"github.com/cocktail18/wx-helper-go/proto"
+	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/spf13/cast"
 	"strings"
 )

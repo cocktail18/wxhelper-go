@@ -87,5 +87,5 @@ func GetWxInstallPath() (string, error) {
 
 	// 将UTF16编码转换为Go字符串
 	realPathStr := syscall.UTF16ToString(realPath)
-	return realPathStr + "/WeChat.exe", nil
+	return realPathStr, nil
 }

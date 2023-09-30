@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/cocktail18/wx-helper-go/proto"
-	"github.com/cocktail18/wx-helper-go/util"
+	"github.com/cocktail18/wxhelper-go/proto"
+	"github.com/cocktail18/wxhelper-go/util"
 	"strings"
 )
 

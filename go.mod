@@ -1,4 +1,4 @@
-module github.com/cocktail18/wx-helper-go
+module github.com/cocktail18/wxhelper-go
 
 go 1.20
 
