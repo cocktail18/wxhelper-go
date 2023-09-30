@@ -13,7 +13,7 @@ import (
 
 const (
 	apiVersion = api.ApiVersionV1 // 3.9.5.81 使用v2
-	dllPath    = "wxhelper.3.9.2.23.dll"
+	dllPath    = "wxhelper.dll"
 	port       = 10086
 )
 
