@@ -26,6 +26,7 @@ type MsgListenServer struct {
 	HookSuccess bool
 	Callback    func(bs []byte)
 	MsgChannel  chan []byte
+	IsClosed    bool
 }
 
 func NewApi(apiVersion ApiVersion, baseUrl string) *Api {
@@ -33,16 +34,35 @@ func NewApi(apiVersion ApiVersion, baseUrl string) *Api {
 		Callback:    nil,
 		MsgChannel:  make(chan []byte, 512),
 		HookSuccess: false,
+		IsClosed:    false,
 	}
-	go func() {
+	util.RecoveryGo(func() {
 		for bs := range msgListenServer.MsgChannel {
 			if msgListenServer.Callback == nil {
 				continue
 			}
 			msgListenServer.Callback(bs)
 		}
-	}()
+	})
 	return &Api{BaseUrl: strings.TrimRight(baseUrl, "/"), ApiVersion: apiVersion, MsgListenInstance: msgListenServer}
+}
+
+func (api *Api) Close() error {
+	api.MsgListenInstance.Lock.Lock()
+	defer api.MsgListenInstance.Lock.Unlock()
+	if api.MsgListenInstance.IsClosed {
+		return nil
+	}
+	if err := api.UnHookMsg(); err != nil {
+		return err
+	}
+	if api.MsgListenInstance.Listener != nil {
+		if err := api.MsgListenInstance.Listener.Close(); err != nil {
+			return err
+		}
+	}
+	close(api.MsgListenInstance.MsgChannel)
+	return nil
 }
 
 func (api *Api) getUrl(url ApiUrl) (string, error) {

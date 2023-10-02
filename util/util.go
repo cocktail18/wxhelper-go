@@ -44,7 +44,7 @@ func GetRandomAvailablePort() (int, error) {
 	return addr.Port, nil
 }
 
-func recoveryGo(f func()) {
+func RecoveryGo(f func()) {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {

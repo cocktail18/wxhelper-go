@@ -13,7 +13,7 @@ const (
 	MsgTypeExpression                MsgType = 47    // 表情
 	MsgTypeTransfer                  MsgType = 49    // 转账，引用消息
 	MsgTypeAfterTransferOrFileHelper MsgType = 51    // 收到转账或者文件助手消息等
-	MsgTypeJoinGroup                 MsgType = 10000 // 进群消息
+	MsgTypeJoinGroup                 MsgType = 10000 // 进群消息 或者 添加好友 后的打招呼
 	MsgTypeScan                      MsgType = 10002 // 扫码触发,会触发2次, 有一次有编号,一次没有,还有登陆之后也有,很多情况都会调用这个
 
 )
