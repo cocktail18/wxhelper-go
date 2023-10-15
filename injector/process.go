@@ -34,13 +34,12 @@ func FindProcessListByName(name string) ([]*Process, error) {
 
 	var entry = syscall.ProcessEntry32{}
 	entry.Size = uint32(unsafe.Sizeof(entry))
-	var process Process
 
 	for true {
 		if nil != syscall.Process32Next(handle, &entry) {
 			break
 		}
-
+		var process Process
 		_exeFile := w32.UTF16PtrToString(&entry.ExeFile[0])
 		if strings.ToLower(name) == strings.ToLower(_exeFile) {
 			process.Name = _exeFile
