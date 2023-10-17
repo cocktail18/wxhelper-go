@@ -212,3 +212,19 @@ func (api *Api) GetContactNickname(wxidOrGroupId string) (string, error) {
 	}
 	return string(resp.Data), err
 }
+
+// ConfirmFriendRequest
+// permission 好友权限，0.全部 8.仅聊天。（好友超过5000人后，会验证权限，传8即可）
+func (api *Api) ConfirmFriendRequest(encryptUsername, ticket string, permission int) error {
+	// 看起来有bug，返回都是空
+	url, err := api.getUrl(ConfirmFriendRequest)
+	if err != nil {
+		return err
+	}
+	_, err = util.Request(url, map[string]interface{}{
+		"v3":         encryptUsername,
+		"v4":         ticket,
+		"permission": permission,
+	})
+	return err
+}

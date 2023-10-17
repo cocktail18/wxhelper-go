@@ -32,7 +32,7 @@ const (
 	GetContactNicknameUrl
 
 	//转账相关
-	ComfirmTransfer
+	ConfirmTransfer
 
 	// db操作
 	GetDBInfoUrl
@@ -105,7 +105,7 @@ var (
 			GetContactNicknameUrl: "/api/?type=55",
 
 			//转账相关
-			ComfirmTransfer: "/api/?type=45", //收到转账消息后，自动收款确认。type=49 即是转账消息
+			ConfirmTransfer: "/api/?type=45", //收到转账消息后，自动收款确认。type=49 即是转账消息
 
 			// db操作
 			GetDBInfoUrl: "/api/?type=32",
