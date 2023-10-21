@@ -41,6 +41,21 @@ func (api *Api) GetMemberFromChatRoom(chatRoomId string) (*proto.ChatroomMember,
 	return &roomMember, err
 }
 
+func (api *Api) GetNicknameFromChatRoom(chatRoomId, memberId string) (string, error) {
+	url, err := api.getUrl(GetNicknameFromChatRoomUrl)
+	if err != nil {
+		return "", err
+	}
+	resp, err := util.Request(url, map[string]interface{}{
+		"chatRoomId": chatRoomId,
+		"memberId":   memberId,
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(resp.Data), err
+}
+
 func (api *Api) AddMemberToChatRoom(chatRoomId string, members ...string) error {
 	if len(members) <= 0 {
 		return nil
