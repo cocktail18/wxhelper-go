@@ -53,7 +53,7 @@ func (api *Api) GetNicknameFromChatRoom(chatRoomId, memberId string) (string, er
 	if err != nil {
 		return "", err
 	}
-	return string(resp.Data), err
+	return resp.Nickname, err
 }
 
 func (api *Api) AddMemberToChatRoom(chatRoomId string, members ...string) error {
