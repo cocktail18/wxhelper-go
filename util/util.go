@@ -7,6 +7,7 @@ import (
 	"github.com/imroc/req/v3"
 	"golang.org/x/exp/slog"
 	"net"
+	"runtime/debug"
 )
 
 var (
@@ -48,7 +49,7 @@ func RecoveryGo(f func()) {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				slog.Error("recovery: %+v", err)
+				slog.Error("recovery: ", "err", err, "stack", debug.Stack())
 			}
 		}()
 		f()
