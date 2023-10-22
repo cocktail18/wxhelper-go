@@ -55,11 +55,19 @@ func DecodePrivateMsg(apiVersion api.ApiVersion, bs []byte) (*proto.WxPrivateMsg
 
 		}
 	}
+	privateMsg.AtWxIds = make([]string, 0)
 	doc := etree.NewDocument()
-	if err := doc.ReadFromString(privateMsg.Signature); err != nil {
-		privateMsg.GroupMemberCount = cast.ToInt(doc.FindElement("/msgsource/membercount").Text())
+	if err := doc.ReadFromString(privateMsg.Signature); err == nil {
+		if doc.FindElement("/msgsource/membercount") != nil {
+			privateMsg.GroupMemberCount = cast.ToInt(doc.FindElement("/msgsource/membercount").Text())
+		}
+		if doc.FindElement("/msgsource/atuserlist") != nil {
+			atWxIds := doc.FindElement("/msgsource/atuserlist").Text()
+			if atWxIds != "" {
+				privateMsg.AtWxIds = strings.Split(atWxIds, ",")
+			}
+		}
 	}
-
 	return &privateMsg, nil
 }
 

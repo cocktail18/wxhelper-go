@@ -1,5 +1,7 @@
 package proto
 
+import "strings"
+
 type MsgType int
 
 const (
@@ -105,8 +107,10 @@ type WxPrivateMsg struct {
 	Type               MsgType `json:"type"`
 	DisplayFullContent string  `json:"displayFullContent"`
 	GroupMemberCount   int     `json:"groupMemberCount"`
+
+	AtWxIds []string `json:"atWxIds"`
 }
 
 func (wxPrivateMsg WxPrivateMsg) IsGroup() bool {
-	return wxPrivateMsg.FromGroup != "" && wxPrivateMsg.FromGroup != wxPrivateMsg.FromUser
+	return wxPrivateMsg.FromGroup != "" && (wxPrivateMsg.FromGroup != wxPrivateMsg.FromUser || strings.Contains(wxPrivateMsg.FromGroup, "@"))
 }
