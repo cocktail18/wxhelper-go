@@ -38,8 +38,17 @@ func DecodePrivateMsg(apiVersion api.ApiVersion, bs []byte) (*proto.WxPrivateMsg
 		if err != nil {
 			return nil, err
 		}
-		privateMsg.Content = msgV2.Content
-		privateMsg.FromUser = msgV2.FromUser
+		fromUser := ""
+		if strings.Contains(msgV2.FromUser, "@") { // 来源是群
+			privateMsg.FromGroup = msgV2.FromUser
+			fromUser, privateMsg.Content = getWxIdAndContentFromMsgContent(msgV2.Content)
+		} else { // 私聊
+			fromUser = privateMsg.FromUser
+			privateMsg.Content = msgV2.Content
+		}
+
+		privateMsg.FromUser = fromUser
+		privateMsg.ToUser = msgV2.ToUser
 		privateMsg.IsSendMsg = 0
 		privateMsg.MsgId = msgV2.MsgId
 		privateMsg.Pid = msgV2.Pid
@@ -48,12 +57,8 @@ func DecodePrivateMsg(apiVersion api.ApiVersion, bs []byte) (*proto.WxPrivateMsg
 		privateMsg.Time = time.Unix(int64(msgV2.CreateTime), 0).Format("2006:01:02 15:04:05")
 		privateMsg.Timestamp = msgV2.CreateTime
 		privateMsg.Type = msgV2.Type
-		privateMsg.DisplayFullContent = msgV2.Content
-		if strings.Contains(privateMsg.FromUser, "@") {
-			privateMsg.FromGroup = privateMsg.FromUser
-			privateMsg.FromUser, privateMsg.Content = getWxIdAndContentFromMsgContent(privateMsg.Content)
+		privateMsg.DisplayFullContent = msgV2.DisplayFullContent
 
-		}
 	}
 	privateMsg.AtWxIds = make([]string, 0)
 	doc := etree.NewDocument()

@@ -97,6 +97,7 @@ type WxPrivateMsg struct {
 	Content            string  `json:"content"`
 	FromGroup          string  `json:"fromGroup"`
 	FromUser           string  `json:"fromUser"`
+	ToUser             string  `json:"toUser"`
 	IsSendMsg          int     `json:"isSendMsg"`
 	MsgId              int64   `json:"msgId"`
 	Pid                int     `json:"pid"`

@@ -42,18 +42,55 @@ func (api *Api) GetMemberFromChatRoom(chatRoomId string) (*proto.ChatroomMember,
 }
 
 func (api *Api) GetNicknameFromChatRoom(chatRoomId, memberId string) (string, error) {
-	url, err := api.getUrl(GetNicknameFromChatRoomUrl)
-	if err != nil {
-		return "", err
+	if api.ApiVersion == ApiVersionV1 {
+		url, err := api.getUrl(GetNicknameFromChatRoomUrl)
+		if err != nil {
+			return "", err
+		}
+		resp, err := util.Request(url, map[string]interface{}{
+			"chatRoomId": chatRoomId,
+			"memberId":   memberId,
+		})
+		if err != nil {
+			return "", err
+		}
+		return resp.Nickname, err
+	} else {
+		data, err := api.GetMemberFromChatRoom(chatRoomId)
+		if err != nil {
+			return "", err
+		}
+		if chatRoomId == memberId { //获取群主
+			memberId = data.Admin
+		}
+		memberList := make([]string, 0)
+		if !strings.Contains(data.Members, "^G") {
+			memberList = append(memberList, data.Members)
+		} else {
+			memberList = strings.Split(data.Members, "^G")
+		}
+		nicknameList := make([]string, 0)
+		if !strings.Contains(data.MemberNickname, "^G") {
+			nicknameList = append(nicknameList, data.MemberNickname)
+		} else {
+			nicknameList = strings.Split(data.MemberNickname, "^G")
+		}
+		nickname := ""
+		for i := 0; i < len(memberList); i++ {
+			if memberList[i] == memberId {
+				nickname = nicknameList[i]
+			}
+		}
+		if nickname == "" {
+			profile, err := api.GetContactProfile(memberId)
+			if err != nil {
+				return "", err
+			}
+			return profile.Nickname, nil
+		}
+		return nickname, nil
 	}
-	resp, err := util.Request(url, map[string]interface{}{
-		"chatRoomId": chatRoomId,
-		"memberId":   memberId,
-	})
-	if err != nil {
-		return "", err
-	}
-	return resp.Nickname, err
+
 }
 
 func (api *Api) AddMemberToChatRoom(chatRoomId string, members ...string) error {
