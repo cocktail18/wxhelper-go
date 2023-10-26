@@ -45,8 +45,8 @@ func main() {
 		}
 		switch msg.Type {
 		case proto.MsgTypeChat:
-			fmt.Println("isGroup", msg.IsGroup(), "from", msg.FromUser, "groupId", msg.FromGroup, "content", msg.Content)
-			if !msg.IsGroup() && msg.Content == "hello" {
+			fmt.Println("isGroup", msg.IsFromGroup(), "from", msg.FromUser, "groupId", msg.FromGroup, "content", msg.Content)
+			if !msg.IsFromGroup() && msg.Content == "hello" {
 				ins.SendTextMsg(msg.FromUser, "world")
 			}
 		default:

@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"github.com/beevik/etree"
+	"github.com/cocktail18/wxhelper-go/api"
 	"testing"
 )
 
@@ -45,5 +46,16 @@ func Test_decodeAtMsg(t *testing.T) {
 		fmt.Println(atWxIds)
 	} else {
 		t.Error(err)
+	}
+}
+
+func TestDecodePrivateMsg(t *testing.T) {
+	bs := `{"content":"管理员功能","createTime":1698330838,"displayFullContent":"","fromUser":"wxid_nrnh22229","msgId":1914814922662732747,"msgSequence":804363286,"pid":10076,"signature":"<msgsource>\n\t<signature>v1_39a/a8yC</signature>\n\t<tmp_node>\n\t\t<publisher-id></publisher-id>\n\t</tmp_node>\n</msgsource>\n","toUser":"391113@chatroom","type":1}`
+	got, err := DecodePrivateMsg(api.ApiVersionV2, []byte(bs))
+	if err != nil {
+		t.Error(err)
+	}
+	if got.IsFromGroup() == true {
+		t.Error("is not from group")
 	}
 }

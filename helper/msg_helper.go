@@ -43,7 +43,7 @@ func DecodePrivateMsg(apiVersion api.ApiVersion, bs []byte) (*proto.WxPrivateMsg
 			privateMsg.FromGroup = msgV2.FromUser
 			fromUser, privateMsg.Content = getWxIdAndContentFromMsgContent(msgV2.Content)
 		} else { // 私聊
-			fromUser = privateMsg.FromUser
+			fromUser = msgV2.FromUser
 			privateMsg.Content = msgV2.Content
 		}
 

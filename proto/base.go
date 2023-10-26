@@ -112,6 +112,6 @@ type WxPrivateMsg struct {
 	AtWxIds []string `json:"atWxIds"`
 }
 
-func (wxPrivateMsg WxPrivateMsg) IsGroup() bool {
+func (wxPrivateMsg WxPrivateMsg) IsFromGroup() bool {
 	return wxPrivateMsg.FromGroup != "" && (wxPrivateMsg.FromGroup != wxPrivateMsg.FromUser || strings.Contains(wxPrivateMsg.FromGroup, "@"))
 }
