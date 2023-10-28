@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/cocktail18/wxhelper-go/proto"
 	"github.com/cocktail18/wxhelper-go/util"
+	"golang.org/x/exp/slog"
 	"strings"
 )
 
@@ -25,7 +26,7 @@ func (api *Api) GetChatRoomDetailInfo(chatRoomId string) (*proto.ChatroomDetail,
 	return &roomDetail, err
 }
 
-func (api *Api) GetMemberFromChatRoom(chatRoomId string) (*proto.ChatroomMember, error) {
+func (api *Api) GetMemberFromChatRoom(chatRoomId string, decryptNickname bool) (*proto.ChatroomMember, error) {
 	url, err := api.getUrl(GetMemberFromChatRoomUrl)
 	if err != nil {
 		return nil, err
@@ -37,8 +38,47 @@ func (api *Api) GetMemberFromChatRoom(chatRoomId string) (*proto.ChatroomMember,
 		return nil, err
 	}
 	var roomMember proto.ChatroomMember
-	err = json.Unmarshal(resp.Data, &roomMember)
+	if err = json.Unmarshal(resp.Data, &roomMember); err != nil {
+		return nil, err
+	}
+	if decryptNickname {
+		roomMember.Member2nickname = api.getMemberNameMap(roomMember.Members, roomMember.MemberNickname)
+		roomMember.Admin2nickname = api.getMemberNameMap(roomMember.Admin, roomMember.AdminNickname)
+	}
 	return &roomMember, err
+}
+
+func (api *Api) getMemberNameMap(wxids string, names string) map[string]string {
+	memberList := make([]string, 0)
+	if !strings.Contains(wxids, "^G") {
+		memberList = append(memberList, wxids)
+	} else {
+		memberList = strings.Split(wxids, "^G")
+	}
+	nicknameList := make([]string, 0)
+	if !strings.Contains(names, "^G") {
+		nicknameList = append(nicknameList, names)
+	} else {
+		nicknameList = strings.Split(names, "^G")
+	}
+	ret := make(map[string]string)
+	for i, memberId := range memberList {
+		nickname := ""
+		if len(nicknameList) >= i {
+			nickname = nicknameList[i]
+		}
+		if nickname == "" {
+			profile, err := api.GetContactProfile(memberId)
+			if err != nil {
+				slog.Debug("获取联系人profile失败", "memberId", memberId, "err", err.Error())
+			} else {
+				nickname = profile.Nickname
+			}
+		}
+		ret[memberId] = nickname
+	}
+
+	return ret
 }
 
 func (api *Api) GetNicknameFromChatRoom(chatRoomId, memberId string) (string, error) {
@@ -56,41 +96,17 @@ func (api *Api) GetNicknameFromChatRoom(chatRoomId, memberId string) (string, er
 		}
 		return resp.Nickname, err
 	} else {
-		data, err := api.GetMemberFromChatRoom(chatRoomId)
+		data, err := api.GetMemberFromChatRoom(chatRoomId, true)
 		if err != nil {
 			return "", err
 		}
 		if chatRoomId == memberId { //获取群主
 			memberId = data.Admin
-		}
-		memberList := make([]string, 0)
-		if !strings.Contains(data.Members, "^G") {
-			memberList = append(memberList, data.Members)
+			return data.Admin2nickname[memberId], nil
 		} else {
-			memberList = strings.Split(data.Members, "^G")
+			return data.Member2nickname[memberId], nil
 		}
-		nicknameList := make([]string, 0)
-		if !strings.Contains(data.MemberNickname, "^G") {
-			nicknameList = append(nicknameList, data.MemberNickname)
-		} else {
-			nicknameList = strings.Split(data.MemberNickname, "^G")
-		}
-		nickname := ""
-		for i := 0; i < len(memberList); i++ {
-			if memberList[i] == memberId {
-				nickname = nicknameList[i]
-			}
-		}
-		if nickname == "" {
-			profile, err := api.GetContactProfile(memberId)
-			if err != nil {
-				return "", err
-			}
-			return profile.Nickname, nil
-		}
-		return nickname, nil
 	}
-
 }
 
 func (api *Api) AddMemberToChatRoom(chatRoomId string, members ...string) error {

@@ -6,7 +6,7 @@ import (
 	"github.com/cocktail18/wxhelper-go/util"
 )
 
-func (api *Api) GetDBInfo() (*proto.DbInfo, error) {
+func (api *Api) GetDBInfo() ([]*proto.DbInfo, error) {
 	url, err := api.getUrl(GetDBInfoUrl)
 	if err != nil {
 		return nil, err
@@ -15,9 +15,9 @@ func (api *Api) GetDBInfo() (*proto.DbInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	var dbInfo proto.DbInfo
+	dbInfo := make([]*proto.DbInfo, 0)
 	err = json.Unmarshal(resp.Data, &dbInfo)
-	return &dbInfo, err
+	return dbInfo, err
 }
 
 func (api *Api) ExecSql(dbHandle int64, sql string) ([][]string, error) {

@@ -3,6 +3,7 @@ package proto
 import "strings"
 
 type MsgType int
+type ContactType int
 
 const (
 
@@ -18,6 +19,18 @@ const (
 	MsgTypeJoinGroup                 MsgType = 10000 // 进群消息 或者 添加好友 后的打招呼
 	MsgTypeScan                      MsgType = 10002 // 扫码触发,会触发2次, 有一次有编号,一次没有,还有登陆之后也有,很多情况都会调用这个
 
+	ContactTypeSys    ContactType = 1 // 系统好友， 漂流瓶、朋友推荐消息、漂流瓶
+	ContactTypeGroup  ContactType = 2 // 群 、文件传输助手
+	ContactTypeFriend ContactType = 3 // 好友
+
+	ContactFMessage    string = "fmessage"    //朋友推荐消息
+	ContactMediaNote   string = "medianote"   //语音记事本
+	ContactFloatBottle string = "floatbottle" //漂流瓶
+	ContactFileHelper  string = "filehelper"  //文件传输助手
+)
+
+var (
+	SysContactArr = []string{ContactFMessage, ContactMediaNote, ContactFloatBottle, ContactFileHelper}
 )
 
 type WxUserInfo struct {
@@ -36,16 +49,29 @@ type WxUserInfo struct {
 }
 
 type ContactInfo struct {
-	CustomAccount string `json:"customAccount"` //自定义账号
-	EncryptName   string `json:"encryptName"`   //昵称
-	Nickname      string `json:"nickname"`      //昵称
-	Pinyin        string `json:"pinyin"`        //简拼
-	PinyinAll     string `json:"pinyinAll"`     //全拼
-	Reserved1     int64  `json:"reserved1"`     //未知
-	Reserved2     int64  `json:"reserved2"`     //未知
-	Type          int64  `json:"type"`          //未知
-	VerifyFlag    int64  `json:"verifyFlag"`    //未知
-	Wxid          string `json:"wxid"`          //wxid
+	CustomAccount string      `json:"customAccount"` //自定义账号
+	EncryptName   string      `json:"encryptName"`   //昵称
+	Nickname      string      `json:"nickname"`      //昵称
+	Pinyin        string      `json:"pinyin"`        //简拼
+	PinyinAll     string      `json:"pinyinAll"`     //全拼
+	Reserved1     int64       `json:"reserved1"`     //未知
+	Reserved2     int64       `json:"reserved2"`     //未知
+	Type          ContactType `json:"type"`          //类型
+	VerifyFlag    int64       `json:"verifyFlag"`    //未知
+	Wxid          string      `json:"wxid"`          //wxid
+}
+
+func (contactInfo ContactInfo) IsGroup() bool {
+	return contactInfo.Type == ContactTypeGroup
+}
+
+func (contactInfo ContactInfo) IsSysContact() bool {
+	for _, s := range SysContactArr {
+		if contactInfo.Wxid == s {
+			return true
+		}
+	}
+	return false
 }
 
 type ContactProfile struct {

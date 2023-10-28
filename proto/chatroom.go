@@ -13,4 +13,7 @@ type ChatroomMember struct {
 	MemberNickname string `json:"memberNickname"` //	成员昵称
 	Admin          string `json:"admin"`          //	群管理
 	AdminNickname  string `json:"adminNickname"`  //	管理昵称
+
+	Member2nickname map[string]string `json:"member2Nickname"`
+	Admin2nickname  map[string]string `json:"admin2Nickname"`
 }
