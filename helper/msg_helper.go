@@ -78,5 +78,8 @@ func DecodePrivateMsg(apiVersion api.ApiVersion, bs []byte) (*proto.WxPrivateMsg
 
 func getWxIdAndContentFromMsgContent(content string) (wxId string, realContent string) {
 	idx := strings.Index(content, ":\n")
+	if idx == -1 {
+		return "", content
+	}
 	return content[:idx], content[idx+2:]
 }
