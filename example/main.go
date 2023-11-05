@@ -18,14 +18,15 @@ const (
 )
 
 func injectWx() {
-	err := injector.InjectWx(apiVersion, dllPath, port)
+	injectorExePath := "./Injector.exe"
+	err := injector.InjectWx(injectorExePath, apiVersion, dllPath, port)
 	if errors.Is(err, injector.ErrWxProcessNotFound) {
 		process, err2 := injector.StartWxProcess()
 		if err2 != nil {
 			panic(err2)
 		}
 		<-time.After(time.Second * 1)
-		err = injector.InjectByProcess(apiVersion, process, dllPath, port)
+		err = injector.InjectByProcess(injectorExePath, apiVersion, process, dllPath, port)
 	}
 	if err != nil {
 		panic(err)

@@ -64,7 +64,7 @@ func (api *Api) getMemberNameMap(wxids string, names string) map[string]string {
 	ret := make(map[string]string)
 	for i, memberId := range memberList {
 		nickname := ""
-		if len(nicknameList) >= i {
+		if len(nicknameList) > i {
 			nickname = nicknameList[i]
 		}
 		if nickname == "" {

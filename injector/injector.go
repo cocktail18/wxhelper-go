@@ -43,7 +43,7 @@ func createConfigFile(port int) error {
 	return nil
 }
 
-func InjectWx(version api.ApiVersion, dllPath string, httpPort int) error {
+func InjectWx(injectorExePath string, version api.ApiVersion, dllPath string, httpPort int) error {
 	processList, err := FindProcessListByName("wechat.exe")
 	if err != nil {
 		return errors.Wrap(err, "查找进程失败")
@@ -52,12 +52,12 @@ func InjectWx(version api.ApiVersion, dllPath string, httpPort int) error {
 		return ErrWxProcessNotFound
 	}
 	for _, process := range processList {
-		return InjectByProcess(version, process, dllPath, httpPort)
+		return InjectByProcess(injectorExePath, version, process, dllPath, httpPort)
 	}
 	return nil
 }
 
-func InjectByProcess(version api.ApiVersion, process *Process, dllPath string, httpPort int) error {
+func InjectByProcess(injectorExePath string, version api.ApiVersion, process *Process, dllPath string, httpPort int) error {
 	var err error
 	// 写入配置文件，然后启动
 	err = createConfigFile(httpPort)
@@ -66,8 +66,8 @@ func InjectByProcess(version api.ApiVersion, process *Process, dllPath string, h
 	}
 	slog.Info("开始注入", "pid", process.ProcessID, "port", httpPort)
 
-	if version == api.ApiVersionV1 {
-		err = InjectByCmd(process.ProcessID, dllPath)
+	if version == api.ApiVersionV1 || injectorExePath != "" {
+		err = InjectByCmd(injectorExePath, process.ProcessID, dllPath)
 		if err != nil {
 			return errors.Wrap(err, "注入失败")
 		}
@@ -102,14 +102,14 @@ func StartWxProcess() (*Process, error) {
 	}, nil
 }
 
-func InjectByCmd(pid int, dllname string) error {
+func InjectByCmd(injectorExePath string, pid int, dllname string) error {
 	dllname, _ = filepath.Abs(dllname)
 	_, err := os.Stat(dllname)
 	if os.IsNotExist(err) {
 		return err
 	}
 	// injector.exe 下载地址 https://github.com/nefarius/Injector  , 要使用win32版本
-	robotCmd := exec.Command("./Injector.exe", "-p", cast.ToString(pid), "-i", dllname)
+	robotCmd := exec.Command(injectorExePath, "-p", cast.ToString(pid), "-i", dllname)
 	robotCmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	return robotCmd.Run()
 }
